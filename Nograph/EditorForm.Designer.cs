@@ -54,12 +54,14 @@
             this.VersionLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.DrawPanel = new System.Windows.Forms.Panel();
             this.label7 = new System.Windows.Forms.Label();
+            this.colorPallete1 = new Nograph.ColorPalette();
             this.label4 = new System.Windows.Forms.Label();
             this.BrushPreviewPictureBox = new System.Windows.Forms.PictureBox();
             this.listView1 = new System.Windows.Forms.ListView();
             this.label3 = new System.Windows.Forms.Label();
             this.BrushSizeInput = new System.Windows.Forms.NumericUpDown();
             this.label2 = new System.Windows.Forms.Label();
+            this.ForegroundColorPicker = new Nograph.ColorPicker();
             this.label1 = new System.Windows.Forms.Label();
             this.ImagePanel = new Nograph.CustomImagePanel();
             this.QuickStartPanel = new System.Windows.Forms.Panel();
@@ -69,8 +71,6 @@
             this.label6 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.canvasPictureBox = new System.Windows.Forms.PictureBox();
-            this.colorPallete1 = new Nograph.ColorPalette();
-            this.ForegroundColorPicker = new Nograph.ColorPicker();
             this.toolStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.DrawPanel.SuspendLayout();
@@ -187,52 +187,52 @@
             // turnLeftToolStripMenuItem
             // 
             this.turnLeftToolStripMenuItem.Name = "turnLeftToolStripMenuItem";
-            this.turnLeftToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.turnLeftToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.turnLeftToolStripMenuItem.Text = "Turn Left 90°";
             this.turnLeftToolStripMenuItem.Click += new System.EventHandler(this.turnLeftToolStripMenuItem_Click);
             // 
             // turnRight90ToolStripMenuItem
             // 
             this.turnRight90ToolStripMenuItem.Name = "turnRight90ToolStripMenuItem";
-            this.turnRight90ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.turnRight90ToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.turnRight90ToolStripMenuItem.Text = "Turn Right 90°";
             this.turnRight90ToolStripMenuItem.Click += new System.EventHandler(this.turnRight90ToolStripMenuItem_Click);
             // 
             // fipVerticalToolStripMenuItem
             // 
             this.fipVerticalToolStripMenuItem.Name = "fipVerticalToolStripMenuItem";
-            this.fipVerticalToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.fipVerticalToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.fipVerticalToolStripMenuItem.Text = "Flip vertical";
             this.fipVerticalToolStripMenuItem.Click += new System.EventHandler(this.fipVerticalToolStripMenuItem_Click);
             // 
             // flipHorizontalToolStripMenuItem
             // 
             this.flipHorizontalToolStripMenuItem.Name = "flipHorizontalToolStripMenuItem";
-            this.flipHorizontalToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.flipHorizontalToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.flipHorizontalToolStripMenuItem.Text = "Flip horizontal";
             this.flipHorizontalToolStripMenuItem.Click += new System.EventHandler(this.flipHorizontalToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(146, 6);
             // 
             // colorizeToolStripMenuItem
             // 
             this.colorizeToolStripMenuItem.Name = "colorizeToolStripMenuItem";
-            this.colorizeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.colorizeToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.colorizeToolStripMenuItem.Text = "Colorize";
             this.colorizeToolStripMenuItem.Click += new System.EventHandler(this.colorizeToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(146, 6);
             // 
             // ResizeButton
             // 
             this.ResizeButton.Name = "ResizeButton";
-            this.ResizeButton.Size = new System.Drawing.Size(180, 22);
+            this.ResizeButton.Size = new System.Drawing.Size(149, 22);
             this.ResizeButton.Text = "Resize";
             this.ResizeButton.Click += new System.EventHandler(this.ResizeButton_Click);
             // 
@@ -310,6 +310,18 @@
             this.label7.TabIndex = 8;
             this.label7.Text = "Brush";
             // 
+            // colorPallete1
+            // 
+            this.colorPallete1.BackColor = System.Drawing.Color.Black;
+            this.colorPallete1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("colorPallete1.BackgroundImage")));
+            this.colorPallete1.Location = new System.Drawing.Point(32, 175);
+            this.colorPallete1.Name = "colorPallete1";
+            this.colorPallete1.Size = new System.Drawing.Size(96, 96);
+            this.colorPallete1.TabIndex = 1;
+            this.colorPallete1.Visible = false;
+            this.colorPallete1.OnColorPicked += new Nograph.ColorPalette.ColorPickEvent(this.colorPalette1_OnColorPicked);
+            this.colorPallete1.OnColorFocused += new Nograph.ColorPalette.ColorPickEvent(this.colorPallete1_OnColorFocused);
+            // 
             // label4
             // 
             this.label4.AutoSize = true;
@@ -385,6 +397,18 @@
             this.label2.Size = new System.Drawing.Size(27, 13);
             this.label2.TabIndex = 2;
             this.label2.Text = "Size";
+            // 
+            // ForegroundColorPicker
+            // 
+            this.ForegroundColorPicker.BackColor = System.Drawing.Color.Black;
+            this.ForegroundColorPicker.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.ForegroundColorPicker.Color = System.Drawing.Color.Black;
+            this.ForegroundColorPicker.Location = new System.Drawing.Point(64, 143);
+            this.ForegroundColorPicker.Name = "ForegroundColorPicker";
+            this.ForegroundColorPicker.Size = new System.Drawing.Size(32, 32);
+            this.ForegroundColorPicker.TabIndex = 1;
+            this.ForegroundColorPicker.OnColorChanged += new Nograph.ColorPicker.ColorChangedEvent(this.colorPicker1_OnColorChanged);
+            this.ForegroundColorPicker.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ForegroundColorPicker_MouseClick);
             // 
             // label1
             // 
@@ -487,30 +511,6 @@
             this.canvasPictureBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseMove);
             this.canvasPictureBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseUp);
             // 
-            // colorPallete1
-            // 
-            this.colorPallete1.BackColor = System.Drawing.Color.Black;
-            this.colorPallete1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("colorPallete1.BackgroundImage")));
-            this.colorPallete1.Location = new System.Drawing.Point(32, 175);
-            this.colorPallete1.Name = "colorPallete1";
-            this.colorPallete1.Size = new System.Drawing.Size(96, 96);
-            this.colorPallete1.TabIndex = 1;
-            this.colorPallete1.Visible = false;
-            this.colorPallete1.OnColorPicked += new Nograph.ColorPalette.ColorPickEvent(this.colorPalette1_OnColorPicked);
-            this.colorPallete1.OnColorFocused += new Nograph.ColorPalette.ColorPickEvent(this.colorPallete1_OnColorFocused);
-            // 
-            // ForegroundColorPicker
-            // 
-            this.ForegroundColorPicker.BackColor = System.Drawing.Color.Black;
-            this.ForegroundColorPicker.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.ForegroundColorPicker.Color = System.Drawing.Color.Black;
-            this.ForegroundColorPicker.Location = new System.Drawing.Point(64, 143);
-            this.ForegroundColorPicker.Name = "ForegroundColorPicker";
-            this.ForegroundColorPicker.Size = new System.Drawing.Size(32, 32);
-            this.ForegroundColorPicker.TabIndex = 1;
-            this.ForegroundColorPicker.OnColorChanged += new Nograph.ColorPicker.ColorChangedEvent(this.colorPicker1_OnColorChanged);
-            this.ForegroundColorPicker.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ForegroundColorPicker_MouseClick);
-            // 
             // EditorForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -520,6 +520,7 @@
             this.Controls.Add(this.DrawPanel);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.toolStrip1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "EditorForm";
             this.Text = "Nograph - Image editor";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.EditorForm_FormClosing);
