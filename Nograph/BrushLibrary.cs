@@ -12,7 +12,7 @@ namespace Nograph
         public BrushLibrary()
         {
             // Load brushes all available
-            const string dir = @"..\..\gfx\";
+            const string dir = @"gfx\";
             var brushFiles = Directory.GetFiles(dir, "*.png");
             Brushes = new Image[brushFiles.Length];
             for (var i = 0; i < brushFiles.Length; i++)
