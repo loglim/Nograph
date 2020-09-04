@@ -653,7 +653,7 @@ namespace Nograph
             UpdateBrush();
         }
 
-        private void AboutButton_Click(object sender, EventArgs e) => new ColorMatrixTester().Show(this);
+        private void AboutButton_Click(object sender, EventArgs e) => new AboutBox().ShowDialog();
 
         private bool IsFileSupported(string filename) => _supportedExtensions.Contains(filename.Substring(filename.Length - 3).ToLower());
 
