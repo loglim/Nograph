@@ -20,7 +20,7 @@ namespace Nograph.Logic
         {
             if (canvas == null) return;
 
-            if (_position >= Size)
+            if (_position >= Size - 1)
             {
                 // Shift-down history entries
                 for (int i = 1; i < _data.Length; i++)

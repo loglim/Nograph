@@ -477,15 +477,6 @@ namespace Nograph
 
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left && System.Windows.Input.Keyboard.IsKeyDown(System.Windows.Input.Key.LeftShift))
-            {
-                DrawPath(_lastUsedX, _lastUsedY, (int)(e.X / _zoom), (int)(e.Y / _zoom));
-                return;
-            }
-
-            _lastUsedX = (int)(e.X / _zoom);
-            _lastUsedY = (int)(e.Y / _zoom);
-
             if (e.Button == MouseButtons.Middle)
             {
                 _lastScrollX = 0;
@@ -495,21 +486,40 @@ namespace Nograph
                 return;
             }
 
-            if (!_isMouseDown)
+            if (Mode == EditMode.Draw)
             {
-                DrawBrushAtPoint((int)(e.X / _zoom), (int)(e.Y / _zoom));
-                RefreshCanvas(true);
+                if (e.Button == MouseButtons.Left && System.Windows.Input.Keyboard.IsKeyDown(System.Windows.Input.Key.LeftShift))
+                {
+                    DrawPath(_lastUsedX, _lastUsedY, (int)(e.X / _zoom), (int)(e.Y / _zoom));
+                    return;
+                }
+
+                _lastUsedX = (int)(e.X / _zoom);
+                _lastUsedY = (int)(e.Y / _zoom);
+
+                if (!_isMouseDown)
+                {
+                    DrawBrushAtPoint((int)(e.X / _zoom), (int)(e.Y / _zoom));
+                    RefreshCanvas(true);
+                }
+
+                _isMouseDown = true;
+                _mouseOriginX = MousePosition.X;
+                _mouseOriginY = MousePosition.Y;
+                _lastScrollX = ImagePanel.HorizontalScroll.Value;
+                _lastScrollY = ImagePanel.VerticalScroll.Value;
+
+                _lastX = (int)(e.X / _zoom);
+                _lastY = (int)(e.Y / _zoom);
             }
-
-            _isMouseDown = true;
-            _mouseOriginX = MousePosition.X;
-            _mouseOriginY = MousePosition.Y;
-            _lastScrollX = ImagePanel.HorizontalScroll.Value;
-            _lastScrollY = ImagePanel.VerticalScroll.Value;
-
-            if (Mode != EditMode.Draw) return;
-            _lastX = (int)(e.X / _zoom);
-            _lastY = (int)(e.Y / _zoom);
+            else
+            {
+                _isMouseDown = true;
+                _mouseOriginX = MousePosition.X;
+                _mouseOriginY = MousePosition.Y;
+                _lastScrollX = ImagePanel.HorizontalScroll.Value;
+                _lastScrollY = ImagePanel.VerticalScroll.Value;
+            }
         }
 
         private void DrawPath(int x0, int y0, int x1, int y1)
