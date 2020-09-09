@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.IO;
 
 namespace Nograph
@@ -13,6 +14,7 @@ namespace Nograph
         {
             // Load brushes all available
             const string dir = @"gfx\";
+            Directory.SetCurrentDirectory(new FileInfo(Environment.GetCommandLineArgs()[0]).DirectoryName);
             var brushFiles = Directory.GetFiles(dir, "*.png");
             Brushes = new Image[brushFiles.Length];
             for (var i = 0; i < brushFiles.Length; i++)
