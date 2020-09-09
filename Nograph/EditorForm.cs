@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nograph.Logic;
+using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -17,11 +18,13 @@ namespace Nograph
         private const float ZoomMax = 32f;
         private const string DefaultFileName = "canvas01.png";
         private const float PathDensityModifier = 6;
+        private const int CanvasHistorySize = 10;
 
         // Private
-        private readonly string[] _supportedExtensions = {"*", "jpg", "png", "bmp", "gif", "ico"};
+        private readonly string[] _supportedExtensions = { "*", "jpg", "png", "bmp", "gif", "ico" };
         private readonly string _fileFilter;
         private Bitmap _canvas;
+        private CanvasHistory _canvasHistory;
         private Graphics _graphics;
         private Brush _activeBrush;
         private Pen _activePen;
@@ -137,6 +140,8 @@ namespace Nograph
             // TODO: Persist choice to disable
             //runLater(1);
 
+            _canvasHistory = new CanvasHistory(CanvasHistorySize);
+
             listView1.Items[0].Selected = true;
             Mode = EditMode.Empty;
             var args = Environment.GetCommandLineArgs();
@@ -144,6 +149,10 @@ namespace Nograph
             {
                 var path = args[1];
                 LoadImage(path);
+            }
+            else
+            {
+                _canvasHistory.Reset(_canvas);
             }
 
             // Update version label
@@ -189,7 +198,7 @@ namespace Nograph
                 _unsavedChanges = true;
             }
 
-            var size = new Size((int) (_zoom * _canvas.Width), (int) (_zoom * _canvas.Height));
+            var size = new Size((int)(_zoom * _canvas.Width), (int)(_zoom * _canvas.Height));
             if (size != _lastRefreshSize)
             {
                 canvasPictureBox.Size = size;
@@ -204,9 +213,9 @@ namespace Nograph
 
         private void ZoomToSize()
         {
-            var aspX = (double) ImagePanel.Width / _canvas.Width;
-            var aspY = (double) ImagePanel.Height / _canvas.Height;
-            _zoom = (float) (aspX > aspY ? aspX : aspY);
+            var aspX = (double)ImagePanel.Width / _canvas.Width;
+            var aspY = (double)ImagePanel.Height / _canvas.Height;
+            _zoom = (float)(aspX > aspY ? aspX : aspY);
             RefreshCanvas(false);
         }
 
@@ -226,6 +235,7 @@ namespace Nograph
                 UpdateFileInfo(path);
                 Mode = EditMode.View;
                 _unsavedChanges = false;
+                _canvasHistory.Reset(_canvas);
                 return $"Successfully loaded file {path}";
             }
             catch (Exception)
@@ -276,6 +286,7 @@ namespace Nograph
                 _activePath = null;
                 _activeFilename = DefaultFileName;
                 Mode = EditMode.Draw;
+                _canvasHistory.Reset(_canvas);
             }
         }
 
@@ -314,42 +325,42 @@ namespace Nograph
             {
                 // TODO: Mingle with the output (input?) quality
                 case "jpg":
-                {
-                    quality = 95L;
-                    format = ImageFormat.Jpeg;
-                    break;
-                }
+                    {
+                        quality = 95L;
+                        format = ImageFormat.Jpeg;
+                        break;
+                    }
                 case "png":
-                {
-                    quality = 1L;
-                    format = ImageFormat.Png;
-                    break;
-                }
+                    {
+                        quality = 1L;
+                        format = ImageFormat.Png;
+                        break;
+                    }
                 case "bmp":
-                {
-                    quality = 1L;
-                    format = ImageFormat.Bmp;
-                    break;
-                }
+                    {
+                        quality = 1L;
+                        format = ImageFormat.Bmp;
+                        break;
+                    }
                 case "gif":
-                {
-                    quality = 1L;
-                    format = ImageFormat.Gif;
-                    break;
-                }
+                    {
+                        quality = 1L;
+                        format = ImageFormat.Gif;
+                        break;
+                    }
                 case "ico":
-                {
-                    quality = 1L;
-                    format = ImageFormat.Icon;
-                    break;
-                }
+                    {
+                        quality = 1L;
+                        format = ImageFormat.Icon;
+                        break;
+                    }
             }
 
             try
             {
                 _canvas.Save(path, GetEncoder(format), new EncoderParameters(1)
                 {
-                    Param = {[0] = new EncoderParameter(Encoder.Quality, quality)}
+                    Param = { [0] = new EncoderParameter(Encoder.Quality, quality) }
                 });
                 UpdateFileInfo(path);
                 _unsavedChanges = false;
@@ -371,7 +382,7 @@ namespace Nograph
 
         private bool SaveFileAs()
         {
-            using (var dialog = new SaveFileDialog {Filter = _fileFilter})
+            using (var dialog = new SaveFileDialog { Filter = _fileFilter })
             {
                 dialog.InitialDirectory = _activePath;
                 dialog.FileName = _activeFilename;
@@ -422,6 +433,7 @@ namespace Nograph
 
         private void ApplyRotateFlip(RotateFlipType type)
         {
+            _canvasHistory.Save(_canvas);
             _canvas.RotateFlip(type);
             _unsavedChanges = true;
             RefreshCanvas(true);
@@ -465,7 +477,7 @@ namespace Nograph
 
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
         {
-            if(e.Button == MouseButtons.Left && System.Windows.Input.Keyboard.IsKeyDown(System.Windows.Input.Key.LeftShift))
+            if (e.Button == MouseButtons.Left && System.Windows.Input.Keyboard.IsKeyDown(System.Windows.Input.Key.LeftShift))
             {
                 DrawPath(_lastUsedX, _lastUsedY, (int)(e.X / _zoom), (int)(e.Y / _zoom));
                 return;
@@ -483,7 +495,7 @@ namespace Nograph
                 return;
             }
 
-            if(!_isMouseDown)
+            if (!_isMouseDown)
             {
                 DrawBrushAtPoint((int)(e.X / _zoom), (int)(e.Y / _zoom));
                 RefreshCanvas(true);
@@ -496,8 +508,8 @@ namespace Nograph
             _lastScrollY = ImagePanel.VerticalScroll.Value;
 
             if (Mode != EditMode.Draw) return;
-            _lastX = (int) (e.X / _zoom);
-            _lastY = (int) (e.Y / _zoom);
+            _lastX = (int)(e.X / _zoom);
+            _lastY = (int)(e.Y / _zoom);
         }
 
         private void DrawPath(int x0, int y0, int x1, int y1)
@@ -523,6 +535,7 @@ namespace Nograph
             _isMouseDown = false;
             _lastUsedX = (int)(e.X / _zoom);
             _lastUsedY = (int)(e.Y / _zoom);
+            _canvasHistory.Save(_canvas);
 
             if (Mode != EditMode.Draw) return;
             _lastX = -1;
@@ -539,9 +552,9 @@ namespace Nograph
                     if (_isMouseDown)
                     {
                         ImagePanel.HorizontalScroll.Value =
-                            (_lastScrollX + _mouseOriginX - MousePosition.X).Clamp(0, (int) (_canvas.Width * _zoom));
+                            (_lastScrollX + _mouseOriginX - MousePosition.X).Clamp(0, (int)(_canvas.Width * _zoom));
                         ImagePanel.VerticalScroll.Value =
-                            (_lastScrollY + _mouseOriginY - MousePosition.Y).Clamp(0, (int) (_canvas.Height * _zoom));
+                            (_lastScrollY + _mouseOriginY - MousePosition.Y).Clamp(0, (int)(_canvas.Height * _zoom));
                         //canvasPictureBox.Top = e.Y;
                     }
                 }
@@ -559,8 +572,8 @@ namespace Nograph
 
             if (Mode != EditMode.Draw || !_isMouseDown) return;
 
-            var x = (int) (e.X / _zoom);
-            var y = (int) (e.Y / _zoom);
+            var x = (int)(e.X / _zoom);
+            var y = (int)(e.Y / _zoom);
 
             // Interpolate greater steps
             if (_lastX + _lastY >= 0)
@@ -572,11 +585,11 @@ namespace Nograph
                 var distance = Math.Sqrt(Math.Pow(_lastX - x, 2) + Math.Pow(_lastY - y, 2));
                 if (distance > _brushRadius / 5) // Brush interpolation intensity
                 {
-                    var hDiff = ((double) x - _lastX) / distance;
-                    var vDiff = ((double) y - _lastY) / distance;
+                    var hDiff = ((double)x - _lastX) / distance;
+                    var vDiff = ((double)y - _lastY) / distance;
                     for (var i = 0; i < distance; i++)
                     {
-                        DrawBrushAtPoint((int) (_lastX + i * hDiff), (int) (_lastY + i * vDiff));
+                        DrawBrushAtPoint((int)(_lastX + i * hDiff), (int)(_lastY + i * vDiff));
                     }
                 }
             }
@@ -603,7 +616,7 @@ namespace Nograph
 
         private void UpdateBrush()
         {
-            _brushRadius = (int) BrushSizeInput.Value;
+            _brushRadius = (int)BrushSizeInput.Value;
             _activeBrush = new SolidBrush(ForegroundColorPicker.Color);
             _activePen = new Pen(_activeBrush, _brushRadius * 2);
 
@@ -611,7 +624,7 @@ namespace Nograph
             if (_sourceBrush != null)
             {
                 _activeBrushImage = Utils.ColorizeBitmap(
-                    Utils.ResizeBrushImage((Bitmap) _sourceBrush, _brushRadius, _brushRadius),
+                    Utils.ResizeBrushImage((Bitmap)_sourceBrush, _brushRadius, _brushRadius),
                     new ColorMatrix(Utils.MatrixFromColor(ForegroundColorPicker.Color)));
 
                 previewImage = Utils.ColorizeBitmap(
@@ -706,6 +719,7 @@ namespace Nograph
                 dialog.SetBitmap(_canvas);
                 if (dialog.ShowDialog() != DialogResult.OK) return;
 
+                _canvasHistory.Save(_canvas);
                 _canvas = Utils.ColorizeBitmap(_canvas, dialog.ColMatrix);
                 RefreshCanvas(true);
             }
@@ -742,6 +756,7 @@ namespace Nograph
             {
                 if (dialog.ShowDialog() != DialogResult.OK || !dialog.ShouldResize) return;
 
+                _canvasHistory.Save(_canvas);
                 using (var tmpCanvas = new Bitmap(dialog.TargetWidth, dialog.TargetHeight))
                 {
                     using (var graphics = Graphics.FromImage(tmpCanvas))
@@ -749,7 +764,7 @@ namespace Nograph
                         graphics.DrawImage(_canvas, 0, 0, tmpCanvas.Width, tmpCanvas.Height);
                     }
 
-                    _canvas = (Bitmap) tmpCanvas.Clone();
+                    _canvas = (Bitmap)tmpCanvas.Clone();
                     RefreshCanvas(true);
                 }
             }
@@ -776,20 +791,9 @@ namespace Nograph
             }
         }
 
-        private void EditorForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            CheckUnsavedChanges();
-        }
+        private void EditorForm_FormClosing(object sender, FormClosingEventArgs e) => CheckUnsavedChanges();
 
-        private void EditorForm_ResizeEnd(object sender, EventArgs e)
-        {
-            UpdateIntroPanelLocation();
-        }
-
-        private void EditorForm_Resize(object sender, EventArgs e)
-        {
-            UpdateIntroPanelLocation();
-        }
+        private void EditorForm_Resize(object sender, EventArgs e) => UpdateIntroPanelLocation();
 
         private void UpdateIntroPanelLocation()
         {
@@ -798,6 +802,24 @@ namespace Nograph
             QuickStartPanel.Top = container.Top + container.Height / 2 - QuickStartPanel.Height / 2;
         }
 
+        private void UndoButton_Click(object sender, EventArgs e)
+        {
+            if(_canvasHistory.Undo(ref _canvas))
+            {
+                RefreshCanvas(true);
+            }
+        }
+
+        private void RedoButton_Click(object sender, EventArgs e)
+        {
+            if (_canvasHistory.Redo(ref _canvas))
+            {
+                RefreshCanvas(true);
+            }
+        }
+
+        // TODO: Edit tools - picker, eraser, cloning tool, effects
+
         // TODO: Implement batch/macro mode - save set of transformations applicable repeatedly, autonomously to multiple files
 
         // TODO: Layers
@@ -805,7 +827,5 @@ namespace Nograph
         // TODO: Autocorrection draw shapes (rectangles, ellipses...)
 
         // TODO: Cut, copy, paste, selection types, magic select...
-
-        // TODO: edit tools - rubber, cloning tool, effects
     }
 }

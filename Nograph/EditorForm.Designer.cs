@@ -54,15 +54,16 @@
             this.VersionLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.DrawPanel = new System.Windows.Forms.Panel();
             this.label7 = new System.Windows.Forms.Label();
-            this.colorPallete1 = new Nograph.ColorPalette();
             this.label4 = new System.Windows.Forms.Label();
             this.BrushPreviewPictureBox = new System.Windows.Forms.PictureBox();
             this.listView1 = new System.Windows.Forms.ListView();
             this.label3 = new System.Windows.Forms.Label();
             this.BrushSizeInput = new System.Windows.Forms.NumericUpDown();
             this.label2 = new System.Windows.Forms.Label();
-            this.ForegroundColorPicker = new Nograph.ColorPicker();
             this.label1 = new System.Windows.Forms.Label();
+            this.UndoButton = new System.Windows.Forms.ToolStripMenuItem();
+            this.RedoButton = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.ImagePanel = new Nograph.CustomImagePanel();
             this.QuickStartPanel = new System.Windows.Forms.Panel();
             this.listView2 = new System.Windows.Forms.ListView();
@@ -71,6 +72,8 @@
             this.label6 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.canvasPictureBox = new System.Windows.Forms.PictureBox();
+            this.colorPallete1 = new Nograph.ColorPalette();
+            this.ForegroundColorPicker = new Nograph.ColorPicker();
             this.toolStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.DrawPanel.SuspendLayout();
@@ -170,8 +173,11 @@
             // 
             this.EditButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.EditButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.turnLeftToolStripMenuItem,
+            this.UndoButton,
+            this.RedoButton,
+            this.toolStripSeparator4,
             this.turnRight90ToolStripMenuItem,
+            this.turnLeftToolStripMenuItem,
             this.fipVerticalToolStripMenuItem,
             this.flipHorizontalToolStripMenuItem,
             this.toolStripSeparator2,
@@ -187,52 +193,56 @@
             // turnLeftToolStripMenuItem
             // 
             this.turnLeftToolStripMenuItem.Name = "turnLeftToolStripMenuItem";
-            this.turnLeftToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.turnLeftToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.R)));
+            this.turnLeftToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
             this.turnLeftToolStripMenuItem.Text = "Turn Left 90°";
             this.turnLeftToolStripMenuItem.Click += new System.EventHandler(this.turnLeftToolStripMenuItem_Click);
             // 
             // turnRight90ToolStripMenuItem
             // 
             this.turnRight90ToolStripMenuItem.Name = "turnRight90ToolStripMenuItem";
-            this.turnRight90ToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.turnRight90ToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.R)));
+            this.turnRight90ToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
             this.turnRight90ToolStripMenuItem.Text = "Turn Right 90°";
             this.turnRight90ToolStripMenuItem.Click += new System.EventHandler(this.turnRight90ToolStripMenuItem_Click);
             // 
             // fipVerticalToolStripMenuItem
             // 
             this.fipVerticalToolStripMenuItem.Name = "fipVerticalToolStripMenuItem";
-            this.fipVerticalToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.fipVerticalToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.fipVerticalToolStripMenuItem.Text = "Flip vertical";
             this.fipVerticalToolStripMenuItem.Click += new System.EventHandler(this.fipVerticalToolStripMenuItem_Click);
             // 
             // flipHorizontalToolStripMenuItem
             // 
             this.flipHorizontalToolStripMenuItem.Name = "flipHorizontalToolStripMenuItem";
-            this.flipHorizontalToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.flipHorizontalToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.flipHorizontalToolStripMenuItem.Text = "Flip horizontal";
             this.flipHorizontalToolStripMenuItem.Click += new System.EventHandler(this.flipHorizontalToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(146, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
             // 
             // colorizeToolStripMenuItem
             // 
             this.colorizeToolStripMenuItem.Name = "colorizeToolStripMenuItem";
-            this.colorizeToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.colorizeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.colorizeToolStripMenuItem.Text = "Colorize";
             this.colorizeToolStripMenuItem.Click += new System.EventHandler(this.colorizeToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(146, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(177, 6);
             // 
             // ResizeButton
             // 
             this.ResizeButton.Name = "ResizeButton";
-            this.ResizeButton.Size = new System.Drawing.Size(149, 22);
+            this.ResizeButton.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.W)));
+            this.ResizeButton.Size = new System.Drawing.Size(180, 22);
             this.ResizeButton.Text = "Resize";
             this.ResizeButton.Click += new System.EventHandler(this.ResizeButton_Click);
             // 
@@ -310,20 +320,6 @@
             this.label7.TabIndex = 8;
             this.label7.Text = "Brush";
             // 
-            // colorPallete1
-            // 
-            this.colorPallete1.BackColor = System.Drawing.Color.Black;
-            this.colorPallete1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("colorPallete1.BackgroundImage")));
-            this.colorPallete1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.colorPallete1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.colorPallete1.Location = new System.Drawing.Point(32, 175);
-            this.colorPallete1.Name = "colorPallete1";
-            this.colorPallete1.Size = new System.Drawing.Size(96, 116);
-            this.colorPallete1.TabIndex = 1;
-            this.colorPallete1.Visible = false;
-            this.colorPallete1.OnColorPicked += new Nograph.ColorPalette.ColorPickEvent(this.colorPalette1_OnColorPicked);
-            this.colorPallete1.OnColorFocused += new Nograph.ColorPalette.ColorPickEvent(this.colorPallete1_OnColorFocused);
-            // 
             // label4
             // 
             this.label4.AutoSize = true;
@@ -399,18 +395,6 @@
             this.label2.TabIndex = 2;
             this.label2.Text = "Size";
             // 
-            // ForegroundColorPicker
-            // 
-            this.ForegroundColorPicker.BackColor = System.Drawing.Color.Black;
-            this.ForegroundColorPicker.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.ForegroundColorPicker.Color = System.Drawing.Color.Black;
-            this.ForegroundColorPicker.Location = new System.Drawing.Point(64, 143);
-            this.ForegroundColorPicker.Name = "ForegroundColorPicker";
-            this.ForegroundColorPicker.Size = new System.Drawing.Size(32, 32);
-            this.ForegroundColorPicker.TabIndex = 1;
-            this.ForegroundColorPicker.OnColorChanged += new Nograph.ColorPicker.ColorChangedEvent(this.colorPicker1_OnColorChanged);
-            this.ForegroundColorPicker.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ForegroundColorPicker_MouseClick);
-            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -419,6 +403,27 @@
             this.label1.Size = new System.Drawing.Size(31, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "Color";
+            // 
+            // UndoButton
+            // 
+            this.UndoButton.Name = "UndoButton";
+            this.UndoButton.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
+            this.UndoButton.Size = new System.Drawing.Size(180, 22);
+            this.UndoButton.Text = "Undo";
+            this.UndoButton.Click += new System.EventHandler(this.UndoButton_Click);
+            // 
+            // RedoButton
+            // 
+            this.RedoButton.Name = "RedoButton";
+            this.RedoButton.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Y)));
+            this.RedoButton.Size = new System.Drawing.Size(180, 22);
+            this.RedoButton.Text = "Redo";
+            this.RedoButton.Click += new System.EventHandler(this.RedoButton_Click);
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(177, 6);
             // 
             // ImagePanel
             // 
@@ -515,6 +520,32 @@
             this.canvasPictureBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseMove);
             this.canvasPictureBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseUp);
             // 
+            // colorPallete1
+            // 
+            this.colorPallete1.BackColor = System.Drawing.Color.Black;
+            this.colorPallete1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("colorPallete1.BackgroundImage")));
+            this.colorPallete1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.colorPallete1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.colorPallete1.Location = new System.Drawing.Point(32, 175);
+            this.colorPallete1.Name = "colorPallete1";
+            this.colorPallete1.Size = new System.Drawing.Size(96, 116);
+            this.colorPallete1.TabIndex = 1;
+            this.colorPallete1.Visible = false;
+            this.colorPallete1.OnColorPicked += new Nograph.ColorPalette.ColorPickEvent(this.colorPalette1_OnColorPicked);
+            this.colorPallete1.OnColorFocused += new Nograph.ColorPalette.ColorPickEvent(this.colorPallete1_OnColorFocused);
+            // 
+            // ForegroundColorPicker
+            // 
+            this.ForegroundColorPicker.BackColor = System.Drawing.Color.Black;
+            this.ForegroundColorPicker.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.ForegroundColorPicker.Color = System.Drawing.Color.Black;
+            this.ForegroundColorPicker.Location = new System.Drawing.Point(64, 143);
+            this.ForegroundColorPicker.Name = "ForegroundColorPicker";
+            this.ForegroundColorPicker.Size = new System.Drawing.Size(32, 32);
+            this.ForegroundColorPicker.TabIndex = 1;
+            this.ForegroundColorPicker.OnColorChanged += new Nograph.ColorPicker.ColorChangedEvent(this.colorPicker1_OnColorChanged);
+            this.ForegroundColorPicker.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ForegroundColorPicker_MouseClick);
+            // 
             // EditorForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -529,7 +560,7 @@
             this.Text = "Nograph - Image editor";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.EditorForm_FormClosing);
             this.Load += new System.EventHandler(this.EditorForm_Load);
-            this.ResizeEnd += new System.EventHandler(this.EditorForm_ResizeEnd);
+            this.ResizeEnd += new System.EventHandler(this.EditorForm_Resize);
             this.Resize += new System.EventHandler(this.EditorForm_Resize);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
@@ -592,6 +623,9 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.ToolStripMenuItem UndoButton;
+        private System.Windows.Forms.ToolStripMenuItem RedoButton;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
     }
 }
 

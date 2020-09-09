@@ -113,6 +113,7 @@
     <Compile Include="ImageScale.Designer.cs">
       <DependentUpon>ImageScale.cs</DependentUpon>
     </Compile>
+    <Compile Include="Logic\CanvasHistory.cs" />
     <Compile Include="NewFileDialog.cs">
       <SubType>Form</SubType>
     </Compile>
