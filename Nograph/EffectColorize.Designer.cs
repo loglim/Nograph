@@ -45,8 +45,9 @@ namespace Nograph
             this.label4 = new System.Windows.Forms.Label();
             this.radioButton5 = new System.Windows.Forms.RadioButton();
             this.radioButton6 = new System.Windows.Forms.RadioButton();
-            this.CustomColorPanel = new System.Windows.Forms.Panel();
             this.CancelButton = new System.Windows.Forms.Button();
+            this.colorPicker1 = new Nograph.ColorPicker();
+            this.colorPalette1 = new Nograph.ColorPalette();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.PreviewPictureBox)).BeginInit();
             this.SuspendLayout();
@@ -189,16 +190,6 @@ namespace Nograph
             this.radioButton6.UseVisualStyleBackColor = true;
             this.radioButton6.CheckedChanged += new System.EventHandler(this.radioButton6_CheckedChanged);
             // 
-            // CustomColorPanel
-            // 
-            this.CustomColorPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.CustomColorPanel.Location = new System.Drawing.Point(259, 140);
-            this.CustomColorPanel.Name = "CustomColorPanel";
-            this.CustomColorPanel.Size = new System.Drawing.Size(33, 17);
-            this.CustomColorPanel.TabIndex = 13;
-            this.CustomColorPanel.Visible = false;
-            this.CustomColorPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.CustomColorPanel_MouseClick);
-            // 
             // CancelButton
             // 
             this.CancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
@@ -209,13 +200,37 @@ namespace Nograph
             this.CancelButton.Text = "Cancel";
             this.CancelButton.UseVisualStyleBackColor = true;
             // 
+            // colorPicker1
+            // 
+            this.colorPicker1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.colorPicker1.Color = System.Drawing.Color.Empty;
+            this.colorPicker1.Location = new System.Drawing.Point(257, 132);
+            this.colorPicker1.Name = "colorPicker1";
+            this.colorPicker1.Size = new System.Drawing.Size(32, 32);
+            this.colorPicker1.TabIndex = 16;
+            this.colorPicker1.Click += new System.EventHandler(this.colorPicker1_Click);
+            // 
+            // colorPalette1
+            // 
+            this.colorPalette1.BackColor = System.Drawing.Color.Black;
+            this.colorPalette1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("colorPalette1.BackgroundImage")));
+            this.colorPalette1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.colorPalette1.Location = new System.Drawing.Point(157, 94);
+            this.colorPalette1.Name = "colorPalette1";
+            this.colorPalette1.Size = new System.Drawing.Size(94, 114);
+            this.colorPalette1.TabIndex = 15;
+            this.colorPalette1.Visible = false;
+            this.colorPalette1.OnColorPicked += new Nograph.ColorPalette.ColorPickEvent(this.colorPalette1_OnColorPicked);
+            this.colorPalette1.OnColorFocused += new Nograph.ColorPalette.ColorPickEvent(this.colorPalette1_OnColorFocused);
+            // 
             // EffectColorize
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(304, 257);
+            this.Controls.Add(this.colorPicker1);
+            this.Controls.Add(this.colorPalette1);
             this.Controls.Add(this.CancelButton);
-            this.Controls.Add(this.CustomColorPanel);
             this.Controls.Add(this.radioButton6);
             this.Controls.Add(this.radioButton5);
             this.Controls.Add(this.label4);
@@ -258,7 +273,8 @@ namespace Nograph
         private Label label4;
         private RadioButton radioButton5;
         private RadioButton radioButton6;
-        private Panel CustomColorPanel;
         private Button CancelButton;
+        private ColorPalette colorPalette1;
+        private ColorPicker colorPicker1;
     }
 }

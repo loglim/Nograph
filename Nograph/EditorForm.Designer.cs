@@ -314,9 +314,11 @@
             // 
             this.colorPallete1.BackColor = System.Drawing.Color.Black;
             this.colorPallete1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("colorPallete1.BackgroundImage")));
+            this.colorPallete1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.colorPallete1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.colorPallete1.Location = new System.Drawing.Point(32, 175);
             this.colorPallete1.Name = "colorPallete1";
-            this.colorPallete1.Size = new System.Drawing.Size(96, 96);
+            this.colorPallete1.Size = new System.Drawing.Size(96, 116);
             this.colorPallete1.TabIndex = 1;
             this.colorPallete1.Visible = false;
             this.colorPallete1.OnColorPicked += new Nograph.ColorPalette.ColorPickEvent(this.colorPalette1_OnColorPicked);
@@ -345,15 +347,14 @@
             // 
             // listView1
             // 
-            this.listView1.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.listView1.BackColor = System.Drawing.Color.White;
             this.listView1.HideSelection = false;
-            this.listView1.Location = new System.Drawing.Point(12, 31);
+            this.listView1.Location = new System.Drawing.Point(3, 31);
             this.listView1.MultiSelect = false;
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(136, 97);
+            this.listView1.Size = new System.Drawing.Size(154, 97);
             this.listView1.TabIndex = 5;
             this.listView1.UseCompatibleStateImageBehavior = false;
-            this.listView1.View = System.Windows.Forms.View.SmallIcon;
             this.listView1.SelectedIndexChanged += new System.EventHandler(this.listView1_SelectedIndexChanged);
             this.listView1.MouseEnter += new System.EventHandler(this.listView1_MouseEnter);
             // 
@@ -435,6 +436,7 @@
             // 
             // QuickStartPanel
             // 
+            this.QuickStartPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.QuickStartPanel.Controls.Add(this.listView2);
             this.QuickStartPanel.Controls.Add(this.button2);
             this.QuickStartPanel.Controls.Add(this.label5);
@@ -453,11 +455,12 @@
             this.listView2.Size = new System.Drawing.Size(440, 72);
             this.listView2.TabIndex = 10;
             this.listView2.UseCompatibleStateImageBehavior = false;
+            this.listView2.Visible = false;
             // 
             // button2
             // 
             this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.button2.Location = new System.Drawing.Point(144, 99);
+            this.button2.Location = new System.Drawing.Point(144, 169);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(183, 45);
             this.button2.TabIndex = 9;
@@ -474,6 +477,7 @@
             this.label5.Size = new System.Drawing.Size(143, 20);
             this.label5.TabIndex = 8;
             this.label5.Text = "Open a recent file?";
+            this.label5.Visible = false;
             // 
             // label6
             // 
@@ -488,7 +492,7 @@
             // button1
             // 
             this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.button1.Location = new System.Drawing.Point(144, 48);
+            this.button1.Location = new System.Drawing.Point(144, 118);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(183, 45);
             this.button1.TabIndex = 6;
@@ -526,6 +530,7 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.EditorForm_FormClosing);
             this.Load += new System.EventHandler(this.EditorForm_Load);
             this.ResizeEnd += new System.EventHandler(this.EditorForm_ResizeEnd);
+            this.Resize += new System.EventHandler(this.EditorForm_Resize);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.statusStrip1.ResumeLayout(false);

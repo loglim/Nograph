@@ -52,9 +52,9 @@ namespace Nograph
 
             if (radioButton6.Checked)
             {
-                r = (float) CustomColorPanel.BackColor.R / 255;
-                g = (float) CustomColorPanel.BackColor.G / 255;
-                b = (float) CustomColorPanel.BackColor.B / 255;
+                r = (float)colorPicker1.BackColor.R / 255;
+                g = (float)colorPicker1.BackColor.G / 255;
+                b = (float)colorPicker1.BackColor.B / 255;
             }
 
             float[][] colorMatrix;
@@ -134,18 +134,36 @@ namespace Nograph
             var colorDialog = new ColorDialog();
             if (colorDialog.ShowDialog() != DialogResult.OK) return;
 
-            CustomColorPanel.BackColor = colorDialog.Color;
+            colorPicker1.BackColor = colorDialog.Color;
             UpdatePreview();
         }
 
         private void radioButton6_CheckedChanged(object sender, EventArgs e)
         {
-            CustomColorPanel.Visible = radioButton6.Checked;
+            colorPicker1.Visible = radioButton6.Checked;
             UpdatePreview();
         }
 
         public ColorMatrix ColMatrix { get; private set; }
 
         public bool Apply { get; private set; }
+
+        private void colorPicker1_Click(object sender, EventArgs e)
+        {
+            colorPalette1.Visible = !colorPalette1.Visible;
+        }
+
+        private void colorPalette1_OnColorFocused(Color color)
+        {
+            colorPicker1.Color = color;
+            UpdatePreview();
+        }
+
+        private void colorPalette1_OnColorPicked(Color color)
+        {
+            colorPicker1.Color = color;
+            UpdatePreview();
+            colorPalette1.Hide();
+        }
     }
 }

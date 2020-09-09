@@ -37,7 +37,7 @@
             this.BackColor = System.Drawing.Color.Black;
             this.Name = "ColorPicker";
             this.Size = new System.Drawing.Size(32, 32);
-            this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ColorPicker_MouseClick);
+            this.EnabledChanged += new System.EventHandler(this.ColorPicker_EnabledChanged);
             this.ResumeLayout(false);
 
         }

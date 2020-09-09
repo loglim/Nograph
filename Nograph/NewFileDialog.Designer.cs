@@ -36,9 +36,10 @@
             this.HeightInput = new System.Windows.Forms.NumericUpDown();
             this.label4 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
-            this.colorPicker1 = new Nograph.ColorPicker();
             this.TransparentBackgroundcheckBox = new System.Windows.Forms.CheckBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.colorPicker1 = new Nograph.ColorPicker();
+            this.colorPalette1 = new Nograph.ColorPalette();
             ((System.ComponentModel.ISupportInitialize)(this.WidthInput)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.HeightInput)).BeginInit();
             this.SuspendLayout();
@@ -67,7 +68,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.label1.Location = new System.Drawing.Point(18, 14);
+            this.label1.Location = new System.Drawing.Point(18, 68);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(40, 20);
             this.label1.TabIndex = 2;
@@ -76,7 +77,7 @@
             // WidthInput
             // 
             this.WidthInput.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.WidthInput.Location = new System.Drawing.Point(64, 12);
+            this.WidthInput.Location = new System.Drawing.Point(64, 66);
             this.WidthInput.Maximum = new decimal(new int[] {
             25600,
             0,
@@ -99,7 +100,7 @@
             // HeightInput
             // 
             this.HeightInput.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.HeightInput.Location = new System.Drawing.Point(171, 12);
+            this.HeightInput.Location = new System.Drawing.Point(171, 66);
             this.HeightInput.Maximum = new decimal(new int[] {
             25600,
             0,
@@ -123,7 +124,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.label4.Location = new System.Drawing.Point(256, 14);
+            this.label4.Location = new System.Drawing.Point(256, 68);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(25, 20);
             this.label4.TabIndex = 7;
@@ -133,48 +134,65 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.label6.Location = new System.Drawing.Point(18, 72);
+            this.label6.Location = new System.Drawing.Point(15, 14);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(95, 20);
             this.label6.TabIndex = 9;
             this.label6.Text = "Background";
+            // 
+            // TransparentBackgroundcheckBox
+            // 
+            this.TransparentBackgroundcheckBox.AutoSize = true;
+            this.TransparentBackgroundcheckBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.TransparentBackgroundcheckBox.Location = new System.Drawing.Point(171, 12);
+            this.TransparentBackgroundcheckBox.Name = "TransparentBackgroundcheckBox";
+            this.TransparentBackgroundcheckBox.Size = new System.Drawing.Size(118, 24);
+            this.TransparentBackgroundcheckBox.TabIndex = 11;
+            this.TransparentBackgroundcheckBox.Text = "Transparent ";
+            this.TransparentBackgroundcheckBox.UseVisualStyleBackColor = true;
+            this.TransparentBackgroundcheckBox.CheckedChanged += new System.EventHandler(this.TransparentBackgroundcheckBox_CheckedChanged);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.label2.Location = new System.Drawing.Point(149, 68);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(16, 20);
+            this.label2.TabIndex = 12;
+            this.label2.Text = "x";
             // 
             // colorPicker1
             // 
             this.colorPicker1.BackColor = System.Drawing.Color.White;
             this.colorPicker1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.colorPicker1.Color = System.Drawing.Color.White;
-            this.colorPicker1.Location = new System.Drawing.Point(133, 67);
+            this.colorPicker1.Location = new System.Drawing.Point(122, 12);
             this.colorPicker1.Name = "colorPicker1";
             this.colorPicker1.Size = new System.Drawing.Size(32, 32);
             this.colorPicker1.TabIndex = 10;
+            this.colorPicker1.OnColorChanged += new Nograph.ColorPicker.ColorChangedEvent(this.colorPicker1_OnColorChanged);
+            this.colorPicker1.Click += new System.EventHandler(this.colorPicker1_Click);
             // 
-            // TransparentBackgroundcheckBox
+            // colorPalette1
             // 
-            this.TransparentBackgroundcheckBox.AutoSize = true;
-            this.TransparentBackgroundcheckBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.TransparentBackgroundcheckBox.Location = new System.Drawing.Point(174, 71);
-            this.TransparentBackgroundcheckBox.Name = "TransparentBackgroundcheckBox";
-            this.TransparentBackgroundcheckBox.Size = new System.Drawing.Size(118, 24);
-            this.TransparentBackgroundcheckBox.TabIndex = 11;
-            this.TransparentBackgroundcheckBox.Text = "Transparent ";
-            this.TransparentBackgroundcheckBox.UseVisualStyleBackColor = true;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.label2.Location = new System.Drawing.Point(149, 14);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(16, 20);
-            this.label2.TabIndex = 12;
-            this.label2.Text = "x";
+            this.colorPalette1.BackColor = System.Drawing.Color.Black;
+            this.colorPalette1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("colorPalette1.BackgroundImage")));
+            this.colorPalette1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.colorPalette1.Location = new System.Drawing.Point(91, 36);
+            this.colorPalette1.Name = "colorPalette1";
+            this.colorPalette1.Size = new System.Drawing.Size(94, 114);
+            this.colorPalette1.TabIndex = 13;
+            this.colorPalette1.Visible = false;
+            this.colorPalette1.OnColorPicked += new Nograph.ColorPalette.ColorPickEvent(this.colorPalette1_OnColorPicked);
+            this.colorPalette1.OnColorFocused += new Nograph.ColorPalette.ColorPickEvent(this.colorPalette1_OnColorFocused);
             // 
             // NewFileDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(304, 152);
+            this.Controls.Add(this.colorPalette1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.TransparentBackgroundcheckBox);
             this.Controls.Add(this.colorPicker1);
@@ -210,5 +228,6 @@
         private ColorPicker colorPicker1;
         private System.Windows.Forms.CheckBox TransparentBackgroundcheckBox;
         private System.Windows.Forms.Label label2;
+        private ColorPalette colorPalette1;
     }
 }

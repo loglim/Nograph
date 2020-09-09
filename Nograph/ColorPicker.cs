@@ -7,29 +7,33 @@ namespace Nograph
     {
         public Color Color
         {
-            get => BackColor;
-            set => BackColor = value;
+            get => _color;
+            set => _color = BackColor = value;
         }
 
         public event ColorChangedEvent OnColorChanged;
 
         public delegate void ColorChangedEvent(Color color);
 
+        private Color _color;
+
         public ColorPicker()
         {
             InitializeComponent();
         }
 
-        private void ColorPicker_MouseClick(object sender, MouseEventArgs e)
+        private void ColorPicker_EnabledChanged(object sender, System.EventArgs e)
         {
-            /*using (var dialog = new ColorDialog())
+            if(Enabled)
             {
-                dialog.Color = Color;
-                if (dialog.ShowDialog(this) != DialogResult.OK) return;
-
-                Color = dialog.Color;
-                OnColorChanged?.Invoke(Color);
-            }*/
+                BorderStyle = BorderStyle.Fixed3D;
+                BackColor = _color;
+            }
+            else
+            {
+                BorderStyle = BorderStyle.None;
+                BackColor = Color.Gray;
+            }
         }
     }
 }

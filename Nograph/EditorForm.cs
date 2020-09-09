@@ -16,30 +16,33 @@ namespace Nograph
         private const float ZoomMin = 0.1f;
         private const float ZoomMax = 32f;
         private const string DefaultFileName = "canvas01.png";
+        private const float PathDensityModifier = 6;
 
         // Private
         private readonly string[] _supportedExtensions = {"*", "jpg", "png", "bmp", "gif", "ico"};
         private readonly string _fileFilter;
         private Bitmap _canvas;
         private Graphics _graphics;
-
-        private int _lastX = -1;
-        private int _lastY = -1;
-        private int _mouseOriginX = -1;
-        private int _mouseOriginY = -1;
         private Brush _activeBrush;
         private Pen _activePen;
-        private int _brushRadius;
         private Image _sourceBrush;
         private Image _activeBrushImage;
-        private float _zoom = 1f;
         private Size _lastRefreshSize;
-        private bool _hasCanvasChanged;
-        private int _lastScrollX;
-        private int _lastScrollY;
-        private bool _unsavedChanges;
         private string _activePath;
         private string _activeFilename;
+        private float _zoom = 1f;
+        private int _lastX = -1;
+        private int _lastY = -1;
+        private int _lastUsedX = -1;
+        private int _lastUsedY = -1;
+        private int _mouseOriginX = -1;
+        private int _mouseOriginY = -1;
+        private int _brushRadius;
+        private int _brushAngle;
+        private int _lastScrollX;
+        private int _lastScrollY;
+        private bool _hasCanvasChanged;
+        private bool _unsavedChanges;
 
         // Input modifiers
         private bool _isMouseDown;
@@ -116,63 +119,60 @@ namespace Nograph
         private void EditorForm_Load(object sender, EventArgs e)
         {
             canvasPictureBox.MouseWheel += CanvasPictureBoxMouseWheel;
+            ImagePanel.MouseWheel += CanvasPictureBoxMouseWheel;
             canvasPictureBox.MouseClick += CanvasPictureBoxMouseClick;
             BrushPreviewPictureBox.MouseWheel += BrushPreviewPictureBox_MouseWheel;
-            listView1.MouseWheel += ListView1_MouseWheel;
 
             // Generate previews for brushes
             var il = new ImageList();
             il.Images.AddRange(BrushLibrary.Brushes);
-
             listView1.SmallImageList = il;
-            //listView1.LargeImageList = il;
+            listView1.LargeImageList = il;
             for (var i = 0; i < il.Images.Count; i++)
             {
                 var brushName = $"Brush {i + 1}";
                 listView1.Items.Add(brushName, brushName, i);
             }
 
-            listView1.Items[0].Selected = true;
-
-            // Update version label
-            VersionLabel.Text = $"v.{Assembly.GetExecutingAssembly().GetName().Version}";
-
             // TODO: Persist choice to disable
             //runLater(1);
 
+            listView1.Items[0].Selected = true;
             Mode = EditMode.Empty;
-
             var args = Environment.GetCommandLineArgs();
             if (args.Length > 1)
             {
                 var path = args[1];
                 LoadImage(path);
             }
+
+            // Update version label
+            VersionLabel.Text = $"v.{Assembly.GetExecutingAssembly().GetName().Version}";
         }
 
-        private async Task runLater(int delay)
+        private async Task RunLater(int delay)
         {
             await Task.Delay(delay * 1000);
             new SplashForm().Show(this);
         }
 
-        private void ListView1_MouseWheel(object sender, MouseEventArgs e)
-        {
-            /*var pos = listView1.SelectedItems[0].Index;
-            listView1.Items[pos].Selected = false;
-            pos += Math.Sign(e.Delta);
-            if (pos < 0)
-                pos = listView1.SelectedItems.Count;
-            else if (pos >= listView1.SelectedItems.Count)
-                pos = 0;
-            listView1.Items[pos].Selected = true;*/
-        }
-
         private void BrushPreviewPictureBox_MouseWheel(object sender, MouseEventArgs e)
         {
-            const int brushResizeSpeed = 3;
-            var newSize = BrushSizeInput.Value + Math.Sign(e.Delta) * brushResizeSpeed;
-            BrushSizeInput.Value = newSize.Clamp(BrushSizeInput.Minimum, BrushSizeInput.Maximum);
+            const int brushChangeSpeed = 3;
+            if (ModifierKeys == Keys.Shift)
+            {
+                _brushAngle += Math.Sign(e.Delta) * brushChangeSpeed;
+                if (_brushAngle > 360)
+                    _brushAngle -= 360;
+                if (_brushAngle < 0)
+                    _brushAngle += 360;
+                UpdateBrush();
+            }
+            else
+            {
+                var newSize = BrushSizeInput.Value + Math.Sign(e.Delta) * brushChangeSpeed;
+                BrushSizeInput.Value = newSize.Clamp(BrushSizeInput.Minimum, BrushSizeInput.Maximum);
+            }
         }
 
         private void RefreshCanvas(bool refreshGraphics)
@@ -431,32 +431,18 @@ namespace Nograph
 
         private void CanvasPictureBoxMouseWheel(object sender, MouseEventArgs e)
         {
-            /*var targetValue = ImagePanel.HorizontalScroll.Value + e.Delta / 10;
-            
-            if (targetValue < 0) return;
-
-            if (targetValue > 100) return;*/
-
             var change = 0.1f;
             if (_zoom > 2)
-            {
                 change = 0.2f;
-            }
 
             if (_zoom > 3)
-            {
                 change = 0.25f;
-            }
 
             if (_zoom > 4)
-            {
                 change = 0.4f;
-            }
 
             if (_zoom > 8)
-            {
                 change = 0.6f;
-            }
 
             _zoom = (Math.Sign(e.Delta) * change + _zoom).Clamp(ZoomMin, ZoomMax);
             if (_zoom > 0.9f && _zoom < 1.1f)
@@ -473,15 +459,21 @@ namespace Nograph
             {
                 UpdateBrush();
             }
-
-            //panel1.HorizontalScroll.Value = targetValue;
-            //panel1.VerticalScroll.Value += e.Delta;
         }
 
         private void pictureBox1_MouseEnter(object sender, EventArgs e) => canvasPictureBox.Focus();
 
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
         {
+            if(e.Button == MouseButtons.Left && System.Windows.Input.Keyboard.IsKeyDown(System.Windows.Input.Key.LeftShift))
+            {
+                DrawPath(_lastUsedX, _lastUsedY, (int)(e.X / _zoom), (int)(e.Y / _zoom));
+                return;
+            }
+
+            _lastUsedX = (int)(e.X / _zoom);
+            _lastUsedY = (int)(e.Y / _zoom);
+
             if (e.Button == MouseButtons.Middle)
             {
                 _lastScrollX = 0;
@@ -489,6 +481,12 @@ namespace Nograph
                 ZoomToSize();
                 RefreshCanvas(false);
                 return;
+            }
+
+            if(!_isMouseDown)
+            {
+                DrawBrushAtPoint((int)(e.X / _zoom), (int)(e.Y / _zoom));
+                RefreshCanvas(true);
             }
 
             _isMouseDown = true;
@@ -502,9 +500,29 @@ namespace Nograph
             _lastY = (int) (e.Y / _zoom);
         }
 
+        private void DrawPath(int x0, int y0, int x1, int y1)
+        {
+            var distance = Math.Sqrt(Math.Pow(x1 - x0, 2) + Math.Pow(y1 - y0, 2));
+            var steps = (int)(2 * distance / (double)BrushSizeInput.Value) * PathDensityModifier;
+
+            for (int i = 0; i < steps; i++)
+            {
+                var s = (float)i / steps;
+                /*var x = (int)(x0 + dx * s);
+                var y = (int)(y0 + dy * s);*/
+                var x = (int)Utils.Lerp(x1, x0, s);
+                var y = (int)Utils.Lerp(y1, y0, s);
+                DrawBrushAtPoint(x, y);
+            }
+
+            RefreshCanvas(true);
+        }
+
         private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
         {
             _isMouseDown = false;
+            _lastUsedX = (int)(e.X / _zoom);
+            _lastUsedY = (int)(e.Y / _zoom);
 
             if (Mode != EditMode.Draw) return;
             _lastX = -1;
@@ -600,6 +618,11 @@ namespace Nograph
                     Utils.ResizeBrushImage((Bitmap)_sourceBrush, (int)(_brushRadius * _zoom), (int)(_brushRadius * _zoom)),
                     new ColorMatrix(Utils.MatrixFromColor(ForegroundColorPicker.Color)));
 
+                if (_brushAngle != 0)
+                {
+                    _activeBrushImage = Utils.RotateImage(_activeBrushImage, _brushAngle);
+                    previewImage = Utils.RotateImage(previewImage, _brushAngle);
+                }
 
                 /*using (var bmp = new Bitmap((int)(_brushRadius * _zoom), (int)(_brushRadius * _zoom)))
                 {
@@ -736,13 +759,6 @@ namespace Nograph
 
         private void button2_Click(object sender, EventArgs e) => OpenFile();
 
-        private void EditorForm_ResizeEnd(object sender, EventArgs e)
-        {
-            var container = QuickStartPanel.Parent;
-            QuickStartPanel.Left = container.Left + container.Width / 2 - QuickStartPanel.Width / 2;
-            QuickStartPanel.Top = container.Top + container.Height / 2 - QuickStartPanel.Height / 2;
-        }
-
         private void SetStatus(string message)
         {
             StatusLabel.Text = message;
@@ -763,6 +779,23 @@ namespace Nograph
         private void EditorForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             CheckUnsavedChanges();
+        }
+
+        private void EditorForm_ResizeEnd(object sender, EventArgs e)
+        {
+            UpdateIntroPanelLocation();
+        }
+
+        private void EditorForm_Resize(object sender, EventArgs e)
+        {
+            UpdateIntroPanelLocation();
+        }
+
+        private void UpdateIntroPanelLocation()
+        {
+            var container = QuickStartPanel.Parent;
+            QuickStartPanel.Left = container.Left + container.Width / 2 - QuickStartPanel.Width / 2;
+            QuickStartPanel.Top = container.Top + container.Height / 2 - QuickStartPanel.Height / 2;
         }
 
         // TODO: Implement batch/macro mode - save set of transformations applicable repeatedly, autonomously to multiple files

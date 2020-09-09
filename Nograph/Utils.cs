@@ -72,24 +72,15 @@ namespace Nograph
 
         public static Bitmap ColorizeBitmap(Bitmap original, ColorMatrix colorMatrix)
         {
-            // Create a blank bitmap the same size as original
             var newBitmap = new Bitmap(original.Width, original.Height);
-
-            // Get a graphics object from the new image
             var g = Graphics.FromImage(newBitmap);
-
-            // Create some image attributes
             var attributes = new ImageAttributes();
-
-            // Set the color matrix attribute
             attributes.SetColorMatrix(colorMatrix);
 
-            // Draw the original image on the new image
-            // using the grayscale color matrix
+            // Draw the original image on the new image using the grayscale color matrix
             g.DrawImage(original, new Rectangle(0, 0, original.Width, original.Height),
                 0, 0, original.Width, original.Height, GraphicsUnit.Pixel, attributes);
 
-            // Dispose the Graphics object
             g.Dispose();
             return newBitmap;
         }
@@ -98,16 +89,12 @@ namespace Nograph
         {
             try
             {
-                // Open file in read only mode
                 using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read))
                 {
-                    // Get a binary reader for the file stream
                     using (var reader = new BinaryReader(stream))
                     {
-                        // Copy the content of the file into a memory stream
                         var memoryStream = new MemoryStream(reader.ReadBytes((int) stream.Length));
-                        // Make a new Bitmap object the owner of the MemoryStream
-                        return new Bitmap(memoryStream);
+                        return new Bitmap(memoryStream); // Make a new Bitmap object the owner of the MemoryStream
                     }
                 }
 
@@ -115,7 +102,7 @@ namespace Nograph
             }
             catch (Exception)
             {
-                MessageBox.Show("err: Try again later!");
+                MessageBox.Show("Error: Please try again later!");
             }
 
             return null;
@@ -165,6 +152,30 @@ namespace Nograph
             dialog.KeyDown += Dialog_KeyDown;
         }
 
+        public static Bitmap RotateImage(Image image, float angle)
+        {
+            Bitmap bitmap;
+            var w = image.Width;
+            var h = image.Height;
+            using (var bmp = new Bitmap(w, h))
+            {
+                using (var gfx = Graphics.FromImage(bmp))
+                {
+                    gfx.SmoothingMode = SmoothingMode.HighQuality;
+                    gfx.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                    gfx.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                    gfx.TranslateTransform((float)w / 2, (float)h / 2);
+                    gfx.RotateTransform(angle);
+                    gfx.TranslateTransform((float)-w / 2, (float)-h / 2);
+                    gfx.DrawImage(image, 0, 0);
+                    gfx.Save();
+                    bitmap = (Bitmap)bmp.Clone();
+                }
+            }
+
+            return bitmap;
+        }
+
         public static Bitmap ResizeBrushImage(Bitmap image, int w, int h)
         {
             Bitmap bitmap;
@@ -209,6 +220,20 @@ namespace Nograph
             {
                 ((Form) sender).Close();
             }
+        }
+
+        public static int Clamp(int min, int max, int value)
+        {
+            if (value > max)
+                return max;
+            if (value < min)
+                return min;
+            return value;
+        }
+
+        public static float Lerp(int from, int to, float step)
+        {
+            return from + (to - from) * step;
         }
     }
 }
