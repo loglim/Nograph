@@ -141,7 +141,6 @@ namespace Nograph
             //runLater(1);
 
             _canvasHistory = new CanvasHistory(CanvasHistorySize);
-
             listView1.Items[0].Selected = true;
             Mode = EditMode.Empty;
             var args = Environment.GetCommandLineArgs();
@@ -207,8 +206,6 @@ namespace Nograph
             }
 
             SetStatus($"Zoom @ {Math.Round(_zoom * 100)}% | Size {_canvas.Width} x {_canvas.Height} px");
-            //canvasPictureBox.Size = _canvas.Size;
-            //canvasPictureBox.BringToFront();
         }
 
         private void ZoomToSize()
@@ -253,15 +250,9 @@ namespace Nograph
             _graphics?.Dispose();
         }
 
-        private void newToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            NewFile();
-        }
+        private void newToolStripMenuItem_Click(object sender, EventArgs e) => NewFile();
 
-        private void openToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            OpenFile();
-        }
+        private void openToolStripMenuItem_Click(object sender, EventArgs e) => OpenFile();
 
         private void NewFile()
         {
@@ -310,10 +301,7 @@ namespace Nograph
         {
             if (path == null)
             {
-                if (_activePath == null)
-                {
-                    return SaveFileAs();
-                }
+                if (_activePath == null) return SaveFileAs(); 
 
                 path = Path.Combine(_activePath, _activeFilename);
             }
@@ -323,7 +311,7 @@ namespace Nograph
             var format = ImageFormat.Jpeg;
             switch (ext)
             {
-                // TODO: Mingle with the output (input?) quality
+                // TODO: Tune the output (and perhaps even input) quality
                 case "jpg":
                     {
                         quality = 95L;
@@ -398,23 +386,16 @@ namespace Nograph
             return false;
         }
 
-        private static ImageCodecInfo GetEncoder(ImageFormat format)
-        {
-            return ImageCodecInfo.GetImageDecoders().FirstOrDefault(codec => codec.FormatID == format.Guid);
-        }
+        private static ImageCodecInfo GetEncoder(ImageFormat format) =>
+            ImageCodecInfo.GetImageDecoders().FirstOrDefault(codec => codec.FormatID == format.Guid);
 
-        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            SaveFile();
-        }
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e) => SaveFile();
 
-        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            SaveFileAs();
-        }
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e) => SaveFileAs();
 
         private void exportToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            // TODO: Implement export file formats
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -508,7 +489,6 @@ namespace Nograph
                 _mouseOriginY = MousePosition.Y;
                 _lastScrollX = ImagePanel.HorizontalScroll.Value;
                 _lastScrollY = ImagePanel.VerticalScroll.Value;
-
                 _lastX = (int)(e.X / _zoom);
                 _lastY = (int)(e.Y / _zoom);
             }
@@ -529,9 +509,7 @@ namespace Nograph
 
             for (int i = 0; i < steps; i++)
             {
-                var s = (float)i / steps;
-                /*var x = (int)(x0 + dx * s);
-                var y = (int)(y0 + dy * s);*/
+                var s = i / steps;
                 var x = (int)Utils.Lerp(x1, x0, s);
                 var y = (int)Utils.Lerp(y1, y0, s);
                 DrawBrushAtPoint(x, y);
@@ -565,7 +543,6 @@ namespace Nograph
                             (_lastScrollX + _mouseOriginX - MousePosition.X).Clamp(0, (int)(_canvas.Width * _zoom));
                         ImagePanel.VerticalScroll.Value =
                             (_lastScrollY + _mouseOriginY - MousePosition.Y).Clamp(0, (int)(_canvas.Height * _zoom));
-                        //canvasPictureBox.Top = e.Y;
                     }
                 }
                 else
@@ -588,7 +565,7 @@ namespace Nograph
             // Interpolate greater steps
             if (_lastX + _lastY >= 0)
             {
-                // Line interpolation
+                // TODO: Line interpolation
                 //_graphics.DrawLine(_activePen, _lastX, _lastY, e.X, e.Y);
 
                 // Linear interpolation between two points
@@ -608,12 +585,7 @@ namespace Nograph
             _lastX = x;
             _lastY = y;
 
-            //_graphics.FillEllipse(_activeBrush, e.X - _brushRadius, e.Y - _brushRadius, _brushRadius * 2,
-            //    _brushRadius * 2);
-
             DrawBrushAtPoint(x, y);
-
-            //_graphics.Save();
             RefreshCanvas(false);
         }
 
@@ -646,27 +618,6 @@ namespace Nograph
                     _activeBrushImage = Utils.RotateImage(_activeBrushImage, _brushAngle);
                     previewImage = Utils.RotateImage(previewImage, _brushAngle);
                 }
-
-                /*using (var bmp = new Bitmap((int)(_brushRadius * _zoom), (int)(_brushRadius * _zoom)))
-                {
-                    using (var gfx = Graphics.FromImage(bmp))
-                    {
-                        gfx.SmoothingMode = SmoothingMode.HighQuality;
-                        gfx.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                        gfx.PixelOffsetMode = PixelOffsetMode.HighQuality;
-
-                        gfx.DrawImage(_sourceBrush, 0, 0, _brushRadius * _zoom, _brushRadius * _zoom);
-                        gfx.Save();
-
-                        _activeBrushImage =
-                            Utils.ColorizeBitmap(bmp,
-                                new ColorMatrix(Utils.MatrixFromColor(ForegroundColorPicker.Color)));
-                    }
-                }*/
-
-                /*_activeBrushImage =
-                    Utils.ColorizeBitmap((Bitmap)_sourceBrush,
-                        new ColorMatrix(Utils.MatrixFromColor(ForegroundColorPicker.Color)));*/
             }
 
             BrushPreviewPictureBox.Image = previewImage;
@@ -706,14 +657,9 @@ namespace Nograph
         private void ImagePanel_DragEnter(object sender, DragEventArgs e)
         {
             var fileName = Utils.GetDroppedFileNames(e.Data);
-            if (fileName.Length > 3 && IsFileSupported(fileName))
-            {
-                e.Effect = DragDropEffects.Link;
-            }
-            else
-            {
-                e.Effect = DragDropEffects.None;
-            }
+            e.Effect = fileName.Length > 3 && IsFileSupported(fileName)
+                ? DragDropEffects.Link
+                : DragDropEffects.None;
         }
 
         private void ImagePanel_DragDrop(object sender, DragEventArgs e)
